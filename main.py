@@ -1,7 +1,7 @@
 import pygame
 import time
 import random
-                
+
 # init pygame
 pygame.init()
 pygame.mixer.init()
@@ -53,25 +53,24 @@ running = True
 # score and pattern variable
 score = 0
 pattern = []
-player_pattern = []
+time_delay = 400
 
-def show_pattern(pattern):
+def show_pattern():
     '''
     1 = green
     2 = red
     3 = yellow
     4 = blue
     '''
-    
-    time_delay = 400
-    
+
+    draw_screen()
+    pygame.time.delay(1000)
+
     for x in pattern:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
-        
-        pygame.time.delay(time_delay)
-        
+
         if x == 1:
             draw_screen(g = light_green)
             green_sound.play()
@@ -97,9 +96,11 @@ def show_pattern(pattern):
             blue_sound.stop()
             draw_screen()
 
-    pygame.time.delay(time_delay)
-            
-        
+        pygame.time.delay(time_delay)
+
+    click_listener()
+
+
 def draw_screen(g = green, r = red, y = yellow, b = blue):
     # refresh display
     screen.fill(black)
@@ -115,6 +116,58 @@ def draw_screen(g = green, r = red, y = yellow, b = blue):
 
     pygame.display.update()
 
+def click_listener():
+    clicks = 0
+    player_pattern = []
+
+    while clicks <= len(pattern):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+            if event.type == pygame.MOUSEBUTTONUP:
+                pos = pygame.mouse.get_pos()
+                x = pos[0]
+                y = pos[1]
+
+                if 50 < x < 300 and 150 < y < 400 and green_time == 0:
+                    print('GREEN CLICK')
+                    draw_screen(g = light_green)
+                    green_sound.play()
+                    pygame.time.delay(time_delay)
+                    green_sound.stop()
+                    draw_screen()
+                    player_pattern.append(1)
+                    check_pattern(player_pattern)
+                elif 300 < x < 550 and 150 < y < 400 and red_time == 0:
+                    print('RED CLICK')
+                    red_color = light_red
+                    red_sound.play()
+                    player_pattern.append(2)
+                    check_pattern(player_pattern)
+                elif 50 < x < 300 and 400 < y < 650 and yellow_time == 0:
+                    print('YELLOW CLICK')
+                    yellow_color = light_yellow
+                    yellow_sound.play()
+                    player_pattern.append(3)
+                    check_pattern(player_pattern)
+                elif 300 < x < 550 and 400 < y < 650 and blue_time == 0:
+                    print('BLUE CLICK')
+                    blue_color = light_blue
+                    blue_sound.play()
+                    player_pattern.append(4)
+                    check_pattern(player_pattern)
+
+def new_pattern():
+    pattern.append(random.randint(1, 4))
+    show_pattern()
+
+
+def check_pattern(player_pattern):
+    if len(player_pattern) == len(pattern) and player_pattern == pattern:
+        score += 1
+        new_pattern()
+    elif len(player_pattern) != len(pattern):
+        print('TODO')
 
 def wait_for_start():
     waiting = True
@@ -131,90 +184,14 @@ def wait_for_start():
         screen.blit(start_text1, (110, 300))
         screen.blit(start_text2, (150, 375))
         pygame.display.update()
-    
-wait_for_start()
 
-pattern.append(random.randint(1, 4))
-show_pattern(pattern)
+wait_for_start()
 
 
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-        if event.type == pygame.MOUSEBUTTONUP:
-            pos = pygame.mouse.get_pos()
-            x = pos[0]
-            y = pos[1]
-
-            if 50 < x < 300 and 150 < y < 400 and green_time == 0:
-                print('GREEN CLICK')
-                green_color = light_green
-                green_sound.play()
-                player_pattern.append(1)
-            elif 300 < x < 550 and 150 < y < 400 and red_time == 0:
-                print('RED CLICK')
-                red_color = light_red
-                red_sound.play()
-                player_pattern.append(2)
-            elif 50 < x < 300 and 400 < y < 650 and yellow_time == 0:
-                print('YELLOW CLICK')
-                yellow_color = light_yellow
-                yellow_sound.play()
-                player_pattern.append(3)
-            elif 300 < x < 550 and 400 < y < 650 and blue_time == 0:
-                print('BLUE CLICK')
-                blue_color = light_blue
-                blue_sound.play()
-                player_pattern.append(4)
-            
-
-    # reset colors
-    if green_color == light_green:
-        if green_time == 0:
-            green_time = time.clock()
-        else:
-            if time.clock() > green_time + 0.4:
-                green_color = green
-                green_sound.stop()
-                green_time = 0
-                
-    if red_color == light_red:
-        if red_time == 0:
-            red_time = time.clock()
-        else:
-            if time.clock() > red_time + 0.4:
-                red_color = red
-                red_sound.stop()
-                red_time = 0
-                
-    if yellow_color == light_yellow:
-        if yellow_time == 0:
-            yellow_time = time.clock()
-        else:
-            if time.clock() > yellow_time + 0.4:
-                yellow_color = yellow
-                yellow_sound.stop()
-                yellow_time = 0
-                
-    if blue_color == light_blue:
-        if blue_time == 0:
-            blue_time = time.clock()
-        else:
-            if time.clock() > blue_time + 0.4:
-                blue_color = blue
-                blue_sound.stop()
-                blue_time = 0
-    
-    # check pattern
-    if player_pattern != []:
-        if player_pattern != pattern[len(player_pattern)-1]:
-            running = False
-    if player_pattern == pattern:
-        score += 1
-        player_pattern = []
-        pattern.append(random.randint(1, 4))
-        show_pattern(pattern)
 
     # refresh display
     screen.fill(black)
@@ -234,5 +211,3 @@ while running:
 
 pygame.display.quit()
 pygame.quit()
-
-
