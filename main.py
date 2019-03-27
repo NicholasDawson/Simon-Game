@@ -52,6 +52,7 @@ red_sound = pygame.mixer.Sound('./Assets/Audio/red.wav')
 yellow_sound = pygame.mixer.Sound('./Assets/Audio/yellow.wav')
 blue_sound = pygame.mixer.Sound('./Assets/Audio/blue.wav')
 lose_sound = pygame.mixer.Sound('./Assets/Audio/lose_sfx.wav')
+menu_music = pygame.mixer.Sound('./Assets/Audio/artblock.ogg')
 
 # define game screen init window
 screen = pygame.display.set_mode((600, 700))
@@ -248,6 +249,7 @@ def lose_screen():
 
 def start_menu():
     waiting = True
+    menu_music.play(-1)
     logo_bob = 150
     title_text = title_font.render('Simon', True, white)
 
@@ -262,6 +264,7 @@ def start_menu():
                 y = pos[1]
 
                 if 180 <= x <= 420 and 530 <= y <= 620:
+                    menu_music.stop()
                     waiting = False
 
         # reset screen
