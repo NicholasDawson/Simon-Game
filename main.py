@@ -1,6 +1,7 @@
 import pygame
 import random
 import time
+import sys
 
 
 ########
@@ -82,13 +83,7 @@ def draw_screen(g = green, r = red, y = yellow, b = blue):
     pygame.draw.rect(screen, b, pygame.Rect(300, 400, 250, 250))
 
     pygame.display.update()
-
-
-def quit_check():
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            pygame.quit()
-
+    
 
 def show_pattern():
     # 1 = GREEN
@@ -104,7 +99,9 @@ def show_pattern():
     pygame.time.delay(1000)
 
     for x in pattern:
-        quit_check()
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                quit_game()
 
         if x == 1:
             # GREEN
@@ -156,7 +153,7 @@ def click_listen():
     while time.time() <= turn_time + 3 and len(player_pattern) < len(pattern):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                pygame.quit()
+                quit_game()
             if event.type == pygame.MOUSEBUTTONUP:
                 pos = pygame.mouse.get_pos()
                 x = pos[0]
@@ -202,8 +199,11 @@ def click_listen():
     if not time.time() <= turn_time + 3:
         lose_screen()
 
-
-
+def quit_game():
+        running = False
+        pygame.display.quit()
+        pygame.quit()
+        sys.exit()
 
 def lose_screen():
     lose_sound.play()
@@ -222,7 +222,6 @@ def lose_screen():
     pygame.display.update()
 
     # reset variables
-
     score = 0
     global pattern
     pattern = []
@@ -235,7 +234,7 @@ def lose_screen():
     while waiting:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                pygame.quit()
+                quit_game()
             if event.type == pygame.MOUSEBUTTONUP:
                 pos = pygame.mouse.get_pos()
                 x = pos[0]
@@ -244,10 +243,7 @@ def lose_screen():
                 if 180 <= x <= 420 and 300 <= y <= 390:
                     start_menu()
                 elif 180 <= x <= 420 and 450 <= y <= 540:
-                    pygame.exit()
-
-
-
+                    quit_game()
 
 
 def start_menu():
@@ -259,7 +255,7 @@ def start_menu():
     while waiting:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                pygame.quit()
+                quit_game()
             if event.type == pygame.MOUSEBUTTONUP:
                 pos = pygame.mouse.get_pos()
                 x = pos[0]
@@ -295,8 +291,6 @@ def start_menu():
         new_pattern()
         show_pattern()
         click_listen()
-
-
 
 
 #############
