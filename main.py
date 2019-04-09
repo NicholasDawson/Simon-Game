@@ -155,7 +155,7 @@ def click_listen():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 quit_game()
-            if event.type == pygame.MOUSEBUTTONUP:
+            if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
                 pos = pygame.mouse.get_pos()
                 x = pos[0]
                 y = pos[1]
@@ -236,7 +236,7 @@ def lose_screen():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 quit_game()
-            if event.type == pygame.MOUSEBUTTONUP:
+            if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
                 pos = pygame.mouse.get_pos()
                 x = pos[0]
                 y = pos[1]
@@ -258,7 +258,7 @@ def start_menu():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 quit_game()
-            if event.type == pygame.MOUSEBUTTONUP:
+            if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
                 pos = pygame.mouse.get_pos()
                 x = pos[0]
                 y = pos[1]
